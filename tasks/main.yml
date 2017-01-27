@@ -26,6 +26,14 @@
     - "{{ vpn_configuration_files }}"
   become: yes
 
+- name: List VPN connections
+  command: >
+    nmcli --terse --fields name,type connection show
+    | grep vpn
+    | tail -n +2
+    | cut -d':' -f1
+  register: existing_connections
+
 - name: Create VPN connections
   command: >
     nmcli connection add
@@ -36,7 +44,15 @@
   with_items:
     - "{{ vpn_connections }}"
   become: yes
+  when: item.name not in existing_connections
 
+- name: Delete unknown connections
+  command: >
+    nmcli connection delete "{{ item }}"
+  with_items:
+    - "{{ existing_connections }}"
+  become: yes
+  when: item not in vpn_connections|map(attribute='name')
 
 - name: Configure VPN connections
   command: >
