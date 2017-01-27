@@ -31,7 +31,7 @@ vpn_defaults:
   vpn_type: openvpn
   dev_type: tun
   dev: tun
-  iface: tun0
+  ifname: tun0
   connection_type: password
   save_password: yes
   cipher: AES-128-CBC
