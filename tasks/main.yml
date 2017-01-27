@@ -12,7 +12,7 @@
   file:
     path: "{{ vpn_configuration_path }}"
     state: directory
-    user: root
+    owner: root
     group: root
   become: yes
 
@@ -20,6 +20,8 @@
   copy:
     dest: "{{ vpn_configuration_path }}/{{ item | basename }}"
     src: "{{ item }}"
+    owner: root
+    group: root
   with_items:
     - "{{ vpn_configuration_files }}"
   become: yes
