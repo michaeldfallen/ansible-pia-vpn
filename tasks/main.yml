@@ -27,7 +27,7 @@
   become: yes
 
 - name: List VPN connections
-  command: >
+  shell: >
     nmcli --terse --fields name,type connection show
     | grep vpn
     | tail -n +2
