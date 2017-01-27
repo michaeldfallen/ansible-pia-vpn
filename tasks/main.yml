@@ -30,7 +30,6 @@
   shell: >
     nmcli --terse --fields name,type connection show
     | grep vpn
-    | tail -n +2
     | cut -d':' -f1
   ignore_errors: yes
   register: existing_connections
