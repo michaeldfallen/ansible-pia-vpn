@@ -1,0 +1,128 @@
+---
+# Configure with your Private Internet Access username:
+#
+# pia_username: 'P12345678'
+#
+pia_username: False
+
+vpn_default_apt_dependencies:
+  - network-manager-gnome
+  - network-manager-openvpn-gnome
+
+vpn_apt_dependencies: "{{ vpn_default_apt_dependencies }}"
+
+vpn_configuration_path: '/etc/vpn/pia'
+
+# Override to add your own configuration:
+#
+# vpn_configuration_files:
+#   - /my/custom/certificate.pem
+#
+vpn_configuration_files: "{{ pia_certificates }}"
+
+# The Private Internet Access certificates and CA
+pia_certificates:
+  - ca.rsa.2048.crt
+  - crl.rsa.2048.pem
+
+# Override to change settings used for all VPN connections
+vpn_defaults:
+  type: vpn
+  vpn_type: openvpn
+  dev_type: tun
+  dev: tun
+  iface: tun0
+  connection_type: password
+  save_password: yes
+  cipher: AES-128-CBC
+  comp_lzo: yes
+  port: 1198
+  remote_cert_tls: server
+  ca: ca.rsa.2048.crt
+
+# Override to add your own VPN connections:
+#
+# vpn_connections:
+#   - "{{ pia_default_connections }}"
+#   - remote: 'new-instance.privateinternetaccess.com'
+#     name: 'PIA 2017 new instance'
+#   - remote: 'stronger-encryption.privateinternetaccess.com'
+#     name: 'PIA Stronger Encryption'
+#     cipher: AES-256-CBC
+#
+vpn_connections: "{{ pia_default_connections }}"
+
+# Default standard PIA connections
+pia_default_connections:
+  - remote: aus-melbourne.privateinternetaccess.com 
+    name: 'PIA Australia Melborne'
+  - remote: aus.privateinternetaccess.com 
+    name: 'PIA Australia'
+  - remote: brazil.privateinternetaccess.com 
+    name: 'PIA Brazil'
+  - remote: ca-toronto.privateinternetaccess.com 
+    name: 'PIA Canada Toronto'
+  - remote: ca.privateinternetaccess.com 
+    name: 'PIA Canada'
+  - remote: denmark.privateinternetaccess.com 
+    name: 'PIA Denmark'
+  - remote: fi.privateinternetaccess.com 
+    name: 'PIA Finland'
+  - remote: france.privateinternetaccess.com 
+    name: 'PIA France'
+  - remote: germany.privateinternetaccess.com 
+    name: 'PIA Germany'
+  - remote: hk.privateinternetaccess.com 
+    name: 'PIA Hong Kong'
+  - remote: in.privateinternetaccess.com 
+    name: 'PIA India'
+  - remote: ireland.privateinternetaccess.com 
+    name: 'PIA Ireland'
+  - remote: israel.privateinternetaccess.com 
+    name: 'PIA Israel'
+  - remote: italy.privateinternetaccess.com 
+    name: 'PIA Italy'
+  - remote: japan.privateinternetaccess.com 
+    name: 'PIA Japan'
+  - remote: mexico.privateinternetaccess.com 
+    name: 'PIA Mexico'
+  - remote: nl.privateinternetaccess.com 
+    name: 'PIA Netherlands'
+  - remote: no.privateinternetaccess.com 
+    name: 'PIA Norway'
+  - remote: nz.privateinternetaccess.com 
+    name: 'PIA New Zealand'
+  - remote: ro.privateinternetaccess.com 
+    name: 'PIA Romania'
+  - remote: sg.privateinternetaccess.com 
+    name: 'PIA Singapore'
+  - remote: sweden.privateinternetaccess.com 
+    name: 'PIA Sweden'
+  - remote: swiss.privateinternetaccess.com 
+    name: 'PIA Switzerland'
+  - remote: turkey.privateinternetaccess.com 
+    name: 'PIA Turkey'
+  - remote: uk-london.privateinternetaccess.com 
+    name: 'PIA UK London'
+  - remote: uk-southampton.privateinternetaccess.com 
+    name: 'PIA UK Southhampton'
+  - remote: us-california.privateinternetaccess.com 
+    name: 'PIA US California'
+  - remote: us-chicago.privateinternetaccess.com 
+    name: 'PIA US Chicago'
+  - remote: us-east.privateinternetaccess.com 
+    name: 'PIA US East'
+  - remote: us-florida.privateinternetaccess.com 
+    name: 'PIA US Florida'
+  - remote: us-midwest.privateinternetaccess.com 
+    name: 'PIA US Midwest'
+  - remote: us-newyorkcity.privateinternetaccess.com 
+    name: 'PIA US New York City'
+  - remote: us-seattle.privateinternetaccess.com 
+    name: 'PIA US Seattle'
+  - remote: us-siliconvalley.privateinternetaccess.com 
+    name: 'PIA US Silicon Valley'
+  - remote: us-texas.privateinternetaccess.com 
+    name: 'PIA US Texas'
+  - remote: us-west.privateinternetaccess.com 
+    name: 'PIA US West'

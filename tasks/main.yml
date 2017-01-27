@@ -1,0 +1,52 @@
+---
+
+- name: Install dependencies
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - "{{ vpn_apt_dependencies }}"
+
+- name: Create {{ vpn_configuration_path }}
+  file:
+    path: "{{ vpn_configuration_path }}"
+    state: directory
+    user: root
+    group: root
+  become: yes
+
+- name: Copy Certificate Authority and Certificate
+  copy:
+    dest: "{{ vpn_configuration_path }}/{{ item | basename }}"
+    src: "{{ item }}"
+  with_items:
+    - "{{ vpn_configuration_files }}"
+
+- name: Create VPN connections
+  command: >
+    nmcli connection add
+      con-name "{{ item.name }}"
+      ifname "{{ item.ifname | default(vpn_defaults.ifname) }}"
+      type "{{ item.type | default(vpn_defaults.type) }}"
+      vpn-type "{{ item.vpn_type | default(vpn_defaults.vpn_type) }}"
+  with_items:
+    - "{{ vpn_connections }}"
+
+
+- name: Configure VPN connections
+  command: >
+    nmcli connection modify
+      id "{{ item.name }}"
+      vpn.data "
+        connection-type={{ item.connection_type | default(vpn_defaults.connection_type) }},
+        password-flags={{ item.save_password | default(vpn_defaults.save_password) | ternary(1,0) }},
+        {% if ('remote' in item) %}remote={{ item.remote }}, {% endif %}
+        cipher={{ item.cipher | default(vpn_defaults.cipher) }},
+        comp-lzo={{ item.comp_lzo | default(vpn_defaults.comp_lzo) }},
+        port={{ item.port | default(vpn_defaults.port) }},
+        {% if (pia_username) %}username={{ pia_username }},{% endif %}
+        remote-cert-tls={{ item.remote_cert_tls | default(vpn_defaults.remote_cert_tls) }},
+        ca={{ vpn_configuration_path }}/{{ item.ca | default(vpn_defaults.ca) }}
+      "
+  with_items:
+    - "{{ vpn_connections }}"
