@@ -32,6 +32,7 @@
     | grep vpn
     | tail -n +2
     | cut -d':' -f1
+  ignore_errors: yes
   register: existing_connections
 
 - name: Create VPN connections
@@ -44,13 +45,13 @@
   with_items:
     - "{{ vpn_connections }}"
   become: yes
-  when: item.name not in existing_connections
+  when: item.name not in existing_connections.stdout_lines
 
 - name: Delete unknown connections
   command: >
     nmcli connection delete "{{ item }}"
   with_items:
-    - "{{ existing_connections }}"
+    - "{{ existing_connections.stdout_lines }}"
   become: yes
   when: item not in vpn_connections|map(attribute='name')
 
