@@ -6,6 +6,7 @@
     state: present
   with_items:
     - "{{ vpn_apt_dependencies }}"
+  become: yes
 
 - name: Create {{ vpn_configuration_path }}
   file:
@@ -21,6 +22,7 @@
     src: "{{ item }}"
   with_items:
     - "{{ vpn_configuration_files }}"
+  become: yes
 
 - name: Create VPN connections
   command: >
@@ -31,6 +33,7 @@
       vpn-type "{{ item.vpn_type | default(vpn_defaults.vpn_type) }}"
   with_items:
     - "{{ vpn_connections }}"
+  become: yes
 
 
 - name: Configure VPN connections
@@ -50,3 +53,4 @@
       "
   with_items:
     - "{{ vpn_connections }}"
+  become: yes
